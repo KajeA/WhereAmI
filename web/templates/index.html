@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+  <head>
+    <title>Where Am I?</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+  </head>
+
+  <body>
+  <div class="container">
+    <form method="GET" action="/">
+      <h1>Where do you think you are?</h1>
+      <input type="text" name="city" placeholder="Enter city name" value="{{.City}}">
+      <button type="submit">Get Weather</button>
+    </form>
+  </div>
+
+  <div class="lower-sections">
+    {{if .WeatherData}}
+    <div class="weather">
+      <h3>Your current weather:</h3>
+      <p>Temperature: {{.Temperature}}°C</p>
+      <p>Conditions: {{(index .WeatherData.Weather 0).Description}}</p>
+    </div>
+    {{end}}
+
+    {{if .Planets}}
+    <div class="planets">
+      <h3>You're probably on:</h3>
+      {{range .Planets}}
+      <p>{{.Name}}</p>
+      <p>Climate: {{.Climate}}</p>
+      <p>Terrain: {{.Terrain}}</p>
+      {{end}}
+    </div>
+    {{end}}
+  </div>
+  </body>
+</html>
