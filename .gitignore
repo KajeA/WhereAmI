@@ -1,0 +1,17 @@
+# Binary files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output files
+*.test
+*.out
+
+# Go specific
+/vendor/
+/go.work
+
+# IDE specific
+.idea/

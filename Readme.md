@@ -6,3 +6,8 @@ based on the weather.
 
 Made to experiment with Go
 
+Extension:
+* Use HTTP mocks in testing
+
+![Screenshot_11.png](Screenshot_11.png)
+![Screenshot_12.png](Screenshot_12.png)

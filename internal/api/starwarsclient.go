@@ -2,19 +2,32 @@ package api
 
 import (
 	"encoding/json"
-	"example/hello/pkg/models"
+	"example/hello/internal/models"
 	"fmt"
 	"io"
 	"net/http"
 )
 
-type StarwarsClient struct {
-	baseURL string
+type SwHTTPClient interface {
+	Get(url string) (*http.Response, error)
 }
 
-func NewStarwarsClient() *StarwarsClient {
+type PlanetService interface {
+	GetPlanet() ([]models.Planet, error)
+}
+
+type StarwarsClient struct {
+	baseURL    string
+	httpClient SwHTTPClient
+}
+
+func NewStarwarsClient(httpClient SwHTTPClient) PlanetService {
+	if httpClient == nil {
+		httpClient = &http.Client{}
+	}
 	return &StarwarsClient{
-		baseURL: "https://swapi.dev/api",
+		baseURL:    "https://swapi.dev/api",
+		httpClient: httpClient,
 	}
 }
 
@@ -23,7 +36,7 @@ func (c *StarwarsClient) GetPlanet() ([]models.Planet, error) {
 	nextURL := fmt.Sprintf("%s/planets/", c.baseURL)
 
 	for nextURL != "" {
-		resp, err := http.Get(nextURL)
+		resp, err := c.httpClient.Get(nextURL)
 		if err != nil {
 			return nil, fmt.Errorf("error fetching planets: %v", err)
 		}

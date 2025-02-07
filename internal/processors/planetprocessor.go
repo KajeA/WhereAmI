@@ -1,15 +1,22 @@
 package processors
 
 import (
-	"example/hello/pkg/models"
+	"example/hello/internal/models"
 	"math/rand"
 	"strings"
 )
 
+type PlanetProcessorInterface interface {
+	FindMatchingPlanets(planets []models.Planet, weatherDescription string) []models.Planet
+	SanitizeIncomingWords(input string) []string
+	ClimateMatch(planetClimates, keywords []string) bool
+	ConvertWeather(weather string, temp float64) string
+}
+
 type PlanetProcessor struct {}
 
-func NewPlanetProcessor() *PlanetProcessor {
-	return &PlanetProcessor{}
+func NewPlanetProcessor() PlanetProcessor {
+	return PlanetProcessor{}
 }
 
 func (p *PlanetProcessor) FindMatchingPlanets(planets []models.Planet, weatherDescription string) []models.Planet {

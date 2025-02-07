@@ -1,16 +1,22 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
+
+type WeatherHTTPClient interface {
+	GetWeather(url string) (*WeatherResponse, error)
+}
 
 type WeatherClient struct {
 	APIKey string
 }
 
-func NewWeatherClient(apiKey string) *WeatherClient {
+func NewWeatherClient(apiKey string) WeatherHTTPClient {
 	return &WeatherClient{APIKey: apiKey}
 }
 
@@ -37,7 +43,21 @@ func (c *WeatherClient) GetWeather(city string) (*WeatherResponse, error) {
 	}
 	defer resp.Body.Close()
 
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %v", err)
+	}
+
+	fmt.Printf("Response Body: %s\n", string(body))
+
 	var weather WeatherResponse
+	if err := json.Unmarshal(body, &weather); err != nil {
+		return nil, fmt.Errorf("failed to decode JSON: %v", err)
+	}
+
+	if len(weather.Weather) == 0 {
+		return nil, fmt.Errorf("no weather data in response")
+	}
 
 	return &weather, nil
 }
